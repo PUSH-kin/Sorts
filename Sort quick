@@ -1,0 +1,84 @@
+#include <iostream>
+#include <ctime> 
+#include <cstdlib> 
+using namespace std;
+
+void qsortRecursive(int* arr, int size) {
+	//Указатели в начало и в конец массива
+	int i = 0;
+	int j = size - 1;
+
+	//Центральный элемент массива
+	int mid = arr[size / 2];
+
+	//Делим массив
+	do {
+		//Пробегаем элементы, ищем те, которые нужно перекинуть в другую часть
+		//В левой части массива пропускаем(оставляем на месте) элементы, которые меньше центрального
+		while (arr[i] < mid) {
+			i++;
+		}
+		//В правой части пропускаем элементы, которые больше центрального
+		while (arr[j] > mid) {
+			j--;
+		}
+
+		//Меняем элементы местами
+		if (i <= j) {
+			int tmp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = tmp;
+
+			i++;
+			j--;
+		}
+	} while (i <= j);
+
+
+	//Рекурсивные вызовы, если осталось, что сортировать
+	if (j > 0) {
+		//"Левый кусок"
+		qsortRecursive(arr, j + 1);
+	}
+	if (i < size) {
+		//"Првый кусок"
+		qsortRecursive(&arr[i], size - i);
+	}
+}
+
+int main() {
+	setlocale(LC_ALL, "rus");
+	int n;
+	while (true)
+	{
+		cout << "Введите размер масива для сортировки:";
+		cin >> n;
+		if (cin.fail() or n < 1)
+		{
+			cout << "Введите натуральное число!" << endl;
+			cin.clear();
+			cin.ignore(1000, '\n');
+		}
+		else break;
+	}
+
+	int* arr = new int[n];
+	srand(time(NULL));
+
+	for (int i = 0; i < n; i++)
+	{
+		arr[i] = rand() % 201 - 100;
+	}
+	cout << endl;
+
+	for (int i = 0; i < n; i++)
+		cout << "arr[" << i << "] = " << arr[i] << endl;
+	cout << endl;
+
+	qsortRecursive(arr, n);
+
+	cout << "Массив, отсортированный по возрастанию: " << endl << endl;
+
+	for (int i = 0; i < n; i++)
+		cout << "arr[" << i << "] = " << arr[i] << endl;
+}
